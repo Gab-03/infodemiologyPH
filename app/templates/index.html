@@ -1,0 +1,602 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Infodemiology{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0"></script>
+    <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/3728_RC01/embed_loader.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="/static/logos/DOH_LOGO.png" alt="Infodemiology Logo">
+            </div>
+            <h1>Infodemiology Website</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+                    <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
+                    <li><a href="{% url 'about' %}" class="nav-link">Contacts</a></li>
+                    <li><a href="{% url 'about' %}" class="nav-link">More</a></li>
+                </ul>
+            </nav>
+            <div class="search">
+                <input type="text" placeholder="Search...">
+                <button type="submit"><i class="fa fa-search"></i>Search</button>
+            </div>
+        </div>
+    </header>
+    <main>
+        {% block content %}
+            <div id="region-name" style="margin-top: 20px; font-size: 16px; font-weight: bold;"></div>
+                <div class="map-chart">
+                    <div class="chart"><canvas id="myChart" ></canvas><div style="font-weight: bold;">Prediction</div>
+                    <div style="padding-left: 10px;">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat expedita quis mollitia, amet neque voluptates cumque id sapiente harum explicabo et cum itaque ullam illo, vel dolorem voluptate, minus eius</div>
+                    </div>
+                    <div class="chart"><canvas id="myChart2" ></canvas><div style="font-weight: bold;">Symptoms Distribution</div><div style="padding-left: 10px;">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat expedita quis mollitia, amet neque voluptates cumque id sapiente harum explicabo et cum itaque ullam illo, vel dolorem voluptate, minus eius!</div></div>   
+                    <div id="map-container" style="margin-top: 20px;"></div>
+                    <div class="sidechart" style="width: 500px;"> <div id="region-name2" style="margin-top: 20px; font-size: 16px; font-weight: bold;"></div>
+                    <div style="font-weight: bold;">Health Capacity</div> 
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat expedita quis mollitia, amet neque voluptates cumque id sapiente harum explicabo et cum itaque ullam illo, vel dolorem voluptate, minus eius!
+                            <div class="sidechart" style="width: 450px; margin: auto; height:500px;">
+                                <canvas id="myChart3"></canvas>
+                            </div>
+                        </div>
+                </div>
+                </div>
+
+
+                <h1>Google Trends Widget</h1>
+
+
+
+        {% endblock %}
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var initialData = {
+                labels: ['2024-01-01', '2024-01-02', '2024-01-03', '2024-01-04', '2024-01-05', '2024-01-06'], // Sample date labels
+                datasets: [
+                  {
+                    label: 'Actual Cases',
+                    data: [12, 19, 3, 5, 2, 3], // Initial data for actual cases
+                    borderColor: 'rgba(255, 99, 132, 1)', // Red color for actual cases
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)', // Optional background color
+                    borderWidth: 1
+                  },
+                  {
+                    label: 'Predicted Cases',
+                    data: [10, 15, 4, 7, 3, 5], // Initial data for predicted cases
+                    borderColor: 'rgba(54, 162, 235, 1)', // Blue color for predicted cases
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Optional background color
+                    borderWidth: 1
+                  }
+                ]
+            };
+            var myChart = new Chart(ctx, {
+              type: 'line',
+              data: initialData,
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  x: {
+                    type: 'time', // Use 'time' scale for x-axis
+                    time: {
+                      unit: 'day', // Unit to display
+                      tooltipFormat: 'll' // Format for tooltip
+                    }
+                  },
+                  y: {
+                    beginAtZero: true
+                  }
+                }
+              }
+            });
+
+            var mapUrl = '{% static "map/philippines-topo2.json" %}'; // Adjust this path as necessary
+
+            var width = 400,
+                height = 600; // Adjusted height to make the map more visible
+
+            var svg = d3.select("#map-container").append("svg")
+                .attr("class", "centered-svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            d3.json(mapUrl).then(function(data) {
+                // Check if the expected object exists in the TopoJSON data
+                if (!data || !data.objects || !data.objects.philippines) {
+                    console.error("Invalid TopoJSON file or object structure.");
+                    return;
+                }
+
+                var philippines = data.objects.philippines;
+
+                // Define a color scale
+                var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+                // Adjust projection scale and translation for a larger map
+                var projection = d3.geoMercator()
+                    .fitSize([width, height], topojson.feature(data, philippines));
+
+                var path = d3.geoPath().projection(projection);
+
+                // Draw the map and color regions
+                svg.selectAll("path")
+                    .data(topojson.feature(data, philippines).features)
+                    .enter().append("path")
+                    .attr("d", path)
+                    .style("fill", function(d) {
+                        // Assign color based on region
+                        return colorScale(d.properties.REGION);
+                    })
+                    .on("click", function(event, d) {
+                        // Display the region name when clicked
+                        d3.select("#region-name").text(d.properties.REGION);
+                        d3.select("#region-name2").text(d.properties.REGION);
+
+                        // Fetch new data based on the selected region
+                        var regionName = d.properties.REGION;
+                        var newData = getRegionData(regionName);
+
+                        // Update chart data
+                        myChart.data.datasets[0].data = newData.actualCases;
+                        myChart.data.datasets[1].data = newData.predictedCases;
+                        myChart.update();
+
+                        var doughnutData = getDoughnutData(regionName);
+                        myDoughnutChart.data = doughnutData;
+                        myDoughnutChart.update();
+                    });
+            }).catch(function(error) {
+                console.error("Error loading or parsing TopoJSON file:", error);
+            });
+
+            function getRegionData(region) {
+                // Define your region-specific datasets here
+                var datasets = {
+                    'Ilocos Region (Region I)': {
+                        actualCases: [10, 20, 30, 40, 50, 60],
+                        predictedCases: [12, 22, 32, 42, 52, 62]
+                    },
+                    'Cagayan Valley (Region II)': {
+                        actualCases: [8, 18, 28, 38, 48, 58],
+                        predictedCases: [10, 20, 30, 40, 50, 60]
+                    },
+                    'Central Luzon (Region III)': {
+                        actualCases: [15, 25, 35, 45, 55, 65],
+                        predictedCases: [14, 24, 34, 44, 54, 64]
+                    },
+                    'Metropolitan Manila': {
+                        actualCases: [50, 100, 150, 200, 250, 300],
+                        predictedCases: [55, 105, 155, 205, 255, 305]
+                    },
+                    'CALABARZON (Region IV-A)': {
+                        actualCases: [20, 40, 60, 80, 100, 120],
+                        predictedCases: [22, 42, 62, 82, 102, 122]
+                    },
+                    'MIMAROPA (Region IV-B)': {
+                        actualCases: [12, 24, 36, 48, 60, 72],
+                        predictedCases: [15, 28, 41, 54, 67, 80]
+                    },
+                    'Bicol Region (Region V)': {
+                        actualCases: [5, 15, 25, 35, 45, 55],
+                        predictedCases: [7, 17, 27, 37, 47, 57]
+                    },
+                    'Western Visayas (Region VI)': {
+                        actualCases: [18, 28, 38, 48, 58, 68],
+                        predictedCases: [20, 30, 40, 50, 60, 70]
+                    },
+                    'Central Visayas (Region VII)': {
+                        actualCases: [10, 30, 50, 70, 90, 110],
+                        predictedCases: [12, 32, 52, 72, 92, 112]
+                    },
+                    'Eastern Visayas (Region VIII)': {
+                        actualCases: [7, 17, 27, 37, 47, 57],
+                        predictedCases: [9, 19, 29, 39, 49, 59]
+                    },
+                    'Zamboanga Peninsula (Region IX)': {
+                        actualCases: [13, 23, 33, 43, 53, 63],
+                        predictedCases: [14, 24, 34, 44, 54, 64]
+                    },
+                    'Northern Mindanao (Region X)': {
+                        actualCases: [22, 42, 62, 82, 102, 122],
+                        predictedCases: [25, 45, 65, 85, 105, 125]
+                    },
+                    'Davao Region (Region XI)': {
+                        actualCases: [22, 42, 62, 82, 102, 122],
+                        predictedCases: [25, 45, 65, 85, 105, 125]
+                    },
+                    'Caraga (Region XIII)': {
+                        actualCases: [3, 13, 23, 33, 43, 53],
+                        predictedCases: [5, 15, 25, 35, 45, 55]
+                    },
+                    'SOCCSKSARGEN (Region XII)': {
+                        actualCases: [16, 26, 36, 46, 56, 66],
+                        predictedCases: [18, 28, 38, 48, 58, 68]
+                    },
+                    'Cordillera Administrative Region (CAR)': {
+                        actualCases: [16, 26, 36, 46, 56, 66],
+                        predictedCases: [18, 28, 38, 48, 58, 68]
+                    },
+                    'Autonomous Region of Muslim Mindanao (ARMM)': {
+                        actualCases: [16, 26, 36, 46, 56, 66],
+                        predictedCases: [18, 28, 38, 48, 58, 68]
+                    }
+                };
+
+
+                // Return data for the selected region
+                return datasets[region] || {actualCases: [], predictedCases: []};
+            }
+        });
+
+    /* Doughnut */
+    function getDoughnutData(region) {
+        // Define your region-specific doughnut chart datasets here
+        var doughnutDatasets = {
+            'Ilocos Region (Region I)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [200, 100, 150],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'Cagayan Valley (Region II)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [150, 120, 100],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'Central Luzon (Region III)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [250, 80, 180],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'Metropolitan Manila': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [300, 150, 200],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'CALABARZON (Region IV-A)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [180, 120, 160],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'MIMAROPA (Region IV-B)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [110, 90, 130],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'Bicol Region (Region V)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [130, 140, 100],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'Western Visayas (Region VI)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [170, 160, 150],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'Central Visayas (Region VII)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [190, 140, 120],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'Eastern Visayas (Region VIII)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [150, 130, 110],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'Zamboanga Peninsula (Region IX)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [120, 100, 140],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'Northern Mindanao (Region X)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [160, 140, 170],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'Davao Region (Region XI)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [180, 160, 190],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'Caraga (Region XIII)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [110, 90, 100],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'SOCCSKSARGEN (Region XII)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [150, 120, 130],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'Cordillera Administrative Region (CAR)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [140, 110, 120],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            'Autonomous Region of Muslim Mindanao (ARMM)': {
+                labels: ['cough', 'fever', 'flu'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [130, 100, 110],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            }
+        };        
+
+        // Return data for the selected region
+        return doughnutDatasets[region] || { labels: [], datasets: [] };
+    }
+
+   const doughnutData = {
+    labels: ['cough', 'fever', 'flu'],
+    datasets: [{
+        label: 'My First Dataset',
+        data: [300, 50, 100],
+        backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)'
+        ],
+        hoverOffset: 4
+    }]
+};
+
+// Chart configuration
+const doughnutConfig = {
+    type: 'doughnut',
+    data: doughnutData,
+    options: {}
+};
+
+// Create the doughnut chart
+var myDoughnutChart = new Chart(
+    document.getElementById('myChart2'),
+    doughnutConfig
+);
+
+const labels = ['Available Beds', 'Isol. Beds', 'TTMF', 'Oxygen Tanks', 'Ventilator', 'HR', '%Vaccinated'];
+const data = {
+    labels: labels,
+    datasets: [{
+        label: 'My First Dataset',
+        data: [65, 59, 80, 81, 56, 55, 40],
+        backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 205, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(201, 203, 207, 0.2)'
+        ],
+        borderColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(54, 162, 235)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)'
+        ],
+        borderWidth: 1
+    }]
+};
+
+const config = {
+    type: 'bar',
+    data: data,
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    },
+};
+
+var myChart = new Chart(
+    document.getElementById('myChart3'),
+    config
+);
+
+
+    </script>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="../static//logos/admu.png" alt="Company Logo">
+            </div>
+            <div class="footer-logo">
+                <img src="../static//logos/DOH_LOGO.png" alt="Company Logo">
+            </div>
+            <div  class="footer-logo">
+                <img id="fassster" src="../static//logos/fassster_logo.png" alt="Company Logo">
+            </div>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>About Us</h3>
+                    <p>Providing data-driven solutions for businesses to make informed decisions.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <p>Email: info@dataanalytics.com</p>
+                    <p>Phone: (123) 456-7890</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Follow Us</h3>
+                    <div class="social-icons">
+                        <a href="#"><img src="../static/logos/fb.png" alt="Facebook"></a>
+                        <a href="#"><img src="../static/logos/twitter.png" alt="Twitter"></a>
+                        <a href="#"><img src="../static/logos/linkedin.png" alt="LinkedIn"></a>
+                        <a href="#"><img src="../static/logos/ig.png" alt="Instagram"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Data Analytics Company. All rights reserved.</p>
+        </div>
+    </footer>
+    <!-- <script src="/static/js/map.js"></script>
+    <script src="/static/js/chart.js"></script> -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</body>
+</html>
