@@ -1,0 +1,50 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.mo
+*.pyo
+*.db
+*.sqlite3
+
+# If you are using Django's settings to handle static files:
+staticfiles/
+
+# If you are using Django's settings to handle media files:
+media/
+
+# Backup files
+*.bak
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Virtualenv
+venv/
+ENV/
+env/
+.venv/
+ENV/
+env.bak/
+.venv.bak/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
