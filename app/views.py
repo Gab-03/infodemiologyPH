@@ -11,7 +11,7 @@ def home(request):
         'title': 'Welcome to My Website',
         'content': 'This is the homepage of my Django project.',
     }
-    return render(request, 'home.html', context)
+    return render(request, 'index.html', context)
 
 
 def about(request):
