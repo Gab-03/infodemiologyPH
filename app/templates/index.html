@@ -36,50 +36,95 @@
     </header>
     <main>
         {% block content %}
-            <div id="region-name" style="margin-top: 20px; font-size: 16px; font-weight: bold;"></div>
+        <div class="clock-container">
+            <div class="time" id="time"></div>
+            <div class="date" id="date">February 1, 2020</div>
+        </div>
+            <div id="region-name" style="margin-top: 20px; font-size: 36px; font-weight: bold;">Data Driven Monitoring System</div>
                 <div class="map-chart">
-                    <div class="chart"><canvas id="myChart" ></canvas><div style="font-weight: bold;">Prediction</div>
-                    <div style="padding-left: 10px;">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat expedita quis mollitia, amet neque voluptates cumque id sapiente harum explicabo et cum itaque ullam illo, vel dolorem voluptate, minus eius</div>
+                    <div class="chart"><canvas id="myChart" ></canvas><div style="font-weight: bold; font-size: 23px;">ARIMAX Prediction</div>
+                    <div style="padding-left: 10px; font-size: 20px;" id="arimatext">
+                        ⚠️ Warning: In March 2020, the number of infected cases is expected to increase significantly. Please wear your mask and always practice social distancing to protect yourself and others.</div>
                     </div>
-                    <div class="chart"><canvas id="myChart2" ></canvas><div style="font-weight: bold;">Symptoms Distribution</div><div style="padding-left: 10px;">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat expedita quis mollitia, amet neque voluptates cumque id sapiente harum explicabo et cum itaque ullam illo, vel dolorem voluptate, minus eius!</div></div>   
+                    <div class="chart"><canvas id="myChart2" ></canvas><div style="font-weight: bold;font-size: 23px;">Symptoms Distribution</div><div id="symptoms" style="padding-left: 10px;font-size: 20px;">
+                        Symptoms such as cough, fever, and flu are currently rampant. Please monitor yourself for COVID-19 symptoms, and if you notice any signs, kindly isolate yourself to prevent spreading the virus to others. </div></div>   
+                    
                     <div id="map-container" style="margin-top: 20px;"></div>
+
                     <div class="sidechart" style="width: 500px;"> <div id="region-name2" style="margin-top: 20px; font-size: 16px; font-weight: bold;"></div>
-                    <div style="font-weight: bold;">Health Capacity</div> 
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat expedita quis mollitia, amet neque voluptates cumque id sapiente harum explicabo et cum itaque ullam illo, vel dolorem voluptate, minus eius!
+               
+                    <div style="font-weight: bold; font-size: 36px;">Health Capacity</div> 
+                            Here's a quick overview for the available health and hospital capacity of this region. 
                             <div class="sidechart" style="width: 450px; margin: auto; height:500px;">
                                 <canvas id="myChart3"></canvas>
+
+                                <div id="insight"></div>
+                                <br>
+                                <div id="recommendation"></div>
                             </div>
                         </div>
+                     
                 </div>
+
+                
+               
+                <h1 style="font-size: 36px;">Syndromic Surveillance</h1>
+                    <!-- <div id="trends-widget" style="width: 400px; height: 400px; padding:20px;">
+                        <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/3769_RC01/embed_loader.js"></script>
+                        <script type="text/javascript">
+                            trends.embed.renderExploreWidget("RELATED_QUERIES",
+                            {"comparisonItem":[{"keyword":"cough + ubo","geo":"PH-00","time":"2020-02-01 2020-03-30"}],"category":0,"property":""},
+                            {"exploreQuery":"date=2020-02-01 2020-03-30&geo=PH-00&q=cough%20%2B%20ubo&hl=en","guestPath":"https://trends.google.com:443/trends/embed/"});
+                        </script>
+                    </div>  -->
+                    <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/3769_RC01/embed_loader.js"></script> <script type="text/javascript"> trends.embed.renderExploreWidget("GEO_MAP", {"comparisonItem":[{"keyword":"cough + ubo","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"fever + lagnat","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"covid symptoms","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"flu + trangkaso","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"swab test","geo":"PH","time":"2020-02-01 2020-03-30"}],"category":0,"property":""}, {"exploreQuery":"date=2020-02-01%202020-03-30&geo=PH&q=cough%20%2B%20ubo,fever%20%2B%20lagnat,covid%20symptoms,flu%20%2B%20trangkaso,swab%20test&hl=en","guestPath":"https://trends.google.com:443/trends/embed/"}); </script>
+              
                 </div>
 
-
-                <h1>Google Trends Widget</h1>
-
-
+                    </div>
+                    
+                </div>
+                  <button onclick="window.print();" class="noPrint">
+                  Generate Report
+                  </button>
 
         {% endblock %}
 
     </main>
 
     <script>
+
+       
+
         document.addEventListener('DOMContentLoaded', function () {
             var ctx = document.getElementById('myChart').getContext('2d');
             var initialData = {
-                labels: ['2024-01-01', '2024-01-02', '2024-01-03', '2024-01-04', '2024-01-05', '2024-01-06'], // Sample date labels
+                labels: [
+                '2020-02-01', '2020-02-02', '2020-02-03', '2020-02-04', '2020-02-05',
+                '2020-02-06', '2020-02-07', '2020-02-08', '2020-02-09', '2020-02-10',
+                '2020-02-11', '2020-02-12', '2020-02-13', '2020-02-14', '2020-02-15',
+                '2020-02-16', '2020-02-17', '2020-02-18', '2020-02-19', '2020-02-20',
+                '2020-02-21', '2020-02-22', '2020-02-23', '2020-02-24', '2020-02-25',
+                '2020-02-26', '2020-02-27', '2020-02-28', '2020-02-29', '2020-03-01',
+                '2020-03-02', '2020-03-03', '2020-03-04', '2020-03-05', '2020-03-06',
+                '2020-03-07', '2020-03-08', '2020-03-09', '2020-03-10', '2020-03-11',
+                '2020-03-12', '2020-03-13', '2020-03-14', '2020-03-15', '2020-03-16',
+                '2020-03-17', '2020-03-18', '2020-03-19', '2020-03-20', '2020-03-21',
+                '2020-03-22', '2020-03-23', '2020-03-24', '2020-03-25', '2020-03-26',
+                '2020-03-27', '2020-03-28', '2020-03-29', '2020-03-30'
+            ], // Sample date labels
                 datasets: [
                   {
-                    label: 'Actual Cases',
-                    data: [12, 19, 3, 5, 2, 3], // Initial data for actual cases
+                    label: 'Prediction',
+                    data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 11.0, 7.0, 10.0, 2.0, 8.0, 35.0, 22.0, 1.0, 36.0, 11.0, 12.0, 12.0, 53.0, 53.0, 64.0, 66.0, 60.0, 43.0, 74.0, 181.0, 240.0, 68.0]
+                    , // Initial data for actual cases
                     borderColor: 'rgba(255, 99, 132, 1)', // Red color for actual cases
                     backgroundColor: 'rgba(255, 99, 132, 0.2)', // Optional background color
                     borderWidth: 1
                   },
                   {
-                    label: 'Predicted Cases',
-                    data: [10, 15, 4, 7, 3, 5], // Initial data for predicted cases
+                   
+                    data:[], // Initial data for predicted cases
                     borderColor: 'rgba(54, 162, 235, 1)', // Blue color for predicted cases
                     backgroundColor: 'rgba(54, 162, 235, 0.2)', // Optional background color
                     borderWidth: 1
@@ -106,6 +151,331 @@
                 }
               }
             });
+
+const labels = ['Available Beds', 'Isol. Beds', 'TTMF', 'Oxygen Tanks', 'Ventilator', 'HR', '%Vaccinated'];
+const data = {
+    labels: labels,
+    datasets: [{
+        label: 'My First Dataset',
+        data: [65, 59, 80, 81, 56, 55, 40],
+        backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 205, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(201, 203, 207, 0.2)'
+        ],
+        borderColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(54, 162, 235)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)'
+        ],
+        borderWidth: 1
+    }]
+};
+
+function getHealthCapacity(region){
+    var healthCapacitydatasets = {
+        'Ilocos Region (Region I)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'Cordillera Administrative Region (CAR)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [25, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'Central Luzon (Region III)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        }, 'Metropolitan Manila': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'CALABARZON (Region IV-A)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'MIMAROPA (Region IV-B)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'Bicol Region (Region V)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'Eastern Visayas (Region VIII)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'Western Visayas (Region VI)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'Central Visayas (Region VII)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'Western Visayas (Region VI)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'Zamboanga Peninsula (Region IX)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'Northern Mindanao (Region X)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'Autonomous Region of Muslim Mindanao (ARMM)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'SOCCSKSARGEN (Region XII)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        },
+        'Cagayan Valley (Region II)': {
+            labels: labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+                hoverOffset: 4
+            }]
+        }
+        
+}
+return healthCapacitydatasets[region] || { labels: [], datasets: [] };
+}
+
+const config = {
+    type: 'bar',
+    data: data,
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    },
+};
+
+var myHealthCapacityChart = new Chart(
+    document.getElementById('myChart3'),
+    config
+);
+
+
 
             var mapUrl = '{% static "map/philippines-topo2.json" %}'; // Adjust this path as necessary
 
@@ -159,8 +529,32 @@
                         myChart.update();
 
                         var doughnutData = getDoughnutData(regionName);
+                        var dataValues = doughnutData.datasets[0].data.join(', ');
                         myDoughnutChart.data = doughnutData;
                         myDoughnutChart.update();
+
+                        //health capacity data
+                        var healthCapacity =  getHealthCapacity(regionName);
+                        myHealthCapacityChart.data = healthCapacity;
+                        myHealthCapacityChart.update()
+
+                        d3.select("#arimatext").html("⚠️ Warning: In March 2020, the number of infected cases is expected to <em style='color: red; font-size: 1.2em;'>increase</em> significantly in " + "<strong>" + d.properties.REGION + "</strong>" + ". <br> <br> Please wear your mask and always practice social distancing to protect yourself and others.");
+
+                        d3.select("#symptoms").html(
+                            "In the region of <strong>" + d.properties.REGION + "</strong>, the relative search volumes for COVID-19 symptoms are noteworthy. " +
+                            "The searches for <b style='color: red;'>Cough</b> are at " + doughnutData.datasets[0].data[0] + ", indicating a high level of concern. " +
+                            "<b style='color: blue;'>Fever</b> follows with a search volume of " + doughnutData.datasets[0].data[1] + ", " +
+                            "while <b style='color: orange;'>Flu</b> has a search volume of " + doughnutData.datasets[0].data[2] + "."
+                        );
+                        
+                        
+
+                        d3.select("#insight").html("Observation: In <strong>" + d.properties.REGION + "</strong>"+ "<strong>" + " ,<br>COUGH" + "</strong>" + " appears to be the most searched symptom, indicating it may be the most common concern among residents. Fever and flu also show significant search volumes, suggesting that these symptoms are prevalent and that residents should take precautionary measures, especially if they experience multiple symptoms.")
+
+                        d3.select("#recommendation").html("⚠️ Increase number of ventilators <br> ⚠️ Increase number of oxygen <br> ⚠️ Increase number of beds")
+                        
+
+
                     });
             }).catch(function(error) {
                 console.error("Error loading or parsing TopoJSON file:", error);
@@ -170,80 +564,67 @@
                 // Define your region-specific datasets here
                 var datasets = {
                     'Ilocos Region (Region I)': {
-                        actualCases: [10, 20, 30, 40, 50, 60],
-                        predictedCases: [12, 22, 32, 42, 52, 62]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 3.0, 4.0, 1.0, 2.0, 1.0]
                     },
                     'Cagayan Valley (Region II)': {
-                        actualCases: [8, 18, 28, 38, 48, 58],
-                        predictedCases: [10, 20, 30, 40, 50, 60]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0, 5.0, 4.0, 0.0],
+
                     },
                     'Central Luzon (Region III)': {
-                        actualCases: [15, 25, 35, 45, 55, 65],
-                        predictedCases: [14, 24, 34, 44, 54, 64]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 2.0, 3.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 4.0, 2.0, 5.0, 3.0, 2.0, 6.0, 1.0, 16.0, 15.0, 5.0],
                     },
                     'Metropolitan Manila': {
-                        actualCases: [50, 100, 150, 200, 250, 300],
-                        predictedCases: [55, 105, 155, 205, 255, 305]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 11.0, 7.0, 10.0, 2.0, 8.0, 35.0, 22.0, 1.0, 36.0, 11.0, 12.0, 12.0, 53.0, 53.0, 64.0, 66.0, 60.0, 43.0, 74.0, 181.0, 240.0, 68.0]
+
                     },
                     'CALABARZON (Region IV-A)': {
-                        actualCases: [20, 40, 60, 80, 100, 120],
-                        predictedCases: [22, 42, 62, 82, 102, 122]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 5.0, 4.0, 0.0, 4.0, 2.0, 2.0, 0.0, 8.0, 13.0, 7.0, 12.0, 12.0, 11.0, 8.0, 45.0, 29.0, 19.0],
                     },
                     'MIMAROPA (Region IV-B)': {
-                        actualCases: [12, 24, 36, 48, 60, 72],
-                        predictedCases: [15, 28, 41, 54, 67, 80]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 2.0, 1.0, 0.0],
                     },
                     'Bicol Region (Region V)': {
-                        actualCases: [5, 15, 25, 35, 45, 55],
-                        predictedCases: [7, 17, 27, 37, 47, 57]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 1.0, 0.0]
+                        ,
                     },
                     'Western Visayas (Region VI)': {
-                        actualCases: [18, 28, 38, 48, 58, 68],
-                        predictedCases: [20, 30, 40, 50, 60, 70]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.0, 6.0, 4.0, 0.0],
+                      
                     },
                     'Central Visayas (Region VII)': {
-                        actualCases: [10, 30, 50, 70, 90, 110],
-                        predictedCases: [12, 32, 52, 72, 92, 112]
+                        actualCases: [0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
                     },
                     'Eastern Visayas (Region VIII)': {
-                        actualCases: [7, 17, 27, 37, 47, 57],
-                        predictedCases: [9, 19, 29, 39, 49, 59]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
                     },
                     'Zamboanga Peninsula (Region IX)': {
-                        actualCases: [13, 23, 33, 43, 53, 63],
-                        predictedCases: [14, 24, 34, 44, 54, 64]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
                     },
                     'Northern Mindanao (Region X)': {
-                        actualCases: [22, 42, 62, 82, 102, 122],
-                        predictedCases: [25, 45, 65, 85, 105, 125]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0],
                     },
                     'Davao Region (Region XI)': {
-                        actualCases: [22, 42, 62, 82, 102, 122],
-                        predictedCases: [25, 45, 65, 85, 105, 125]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 0.0, 2.0, 1.0, 16.0, 19.0],
                     },
                     'Caraga (Region XIII)': {
-                        actualCases: [3, 13, 23, 33, 43, 53],
-                        predictedCases: [5, 15, 25, 35, 45, 55]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
                     },
                     'SOCCSKSARGEN (Region XII)': {
-                        actualCases: [16, 26, 36, 46, 56, 66],
-                        predictedCases: [18, 28, 38, 48, 58, 68]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0],
                     },
                     'Cordillera Administrative Region (CAR)': {
-                        actualCases: [16, 26, 36, 46, 56, 66],
-                        predictedCases: [18, 28, 38, 48, 58, 68]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 2.0, 4.0],
                     },
                     'Autonomous Region of Muslim Mindanao (ARMM)': {
-                        actualCases: [16, 26, 36, 46, 56, 66],
-                        predictedCases: [18, 28, 38, 48, 58, 68]
+                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0],
                     }
                 };
-
 
                 // Return data for the selected region
                 return datasets[region] || {actualCases: [], predictedCases: []};
             }
-        });
+        }); 
+
 
     /* Doughnut */
     function getDoughnutData(region) {
@@ -503,53 +884,9 @@ var myDoughnutChart = new Chart(
     doughnutConfig
 );
 
-const labels = ['Available Beds', 'Isol. Beds', 'TTMF', 'Oxygen Tanks', 'Ventilator', 'HR', '%Vaccinated'];
-const data = {
-    labels: labels,
-    datasets: [{
-        label: 'My First Dataset',
-        data: [65, 59, 80, 81, 56, 55, 40],
-        backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(255, 205, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(201, 203, 207, 0.2)'
-        ],
-        borderColor: [
-            'rgb(255, 99, 132)',
-            'rgb(255, 159, 64)',
-            'rgb(255, 205, 86)',
-            'rgb(75, 192, 192)',
-            'rgb(54, 162, 235)',
-            'rgb(153, 102, 255)',
-            'rgb(201, 203, 207)'
-        ],
-        borderWidth: 1
-    }]
-};
-
-const config = {
-    type: 'bar',
-    data: data,
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    },
-};
-
-var myChart = new Chart(
-    document.getElementById('myChart3'),
-    config
-);
-
 
     </script>
+    
     <footer>
         <div class="footer-container">
             <div class="footer-logo">

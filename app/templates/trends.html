@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Trends Feeds</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/3769_RC01/embed_loader.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5 mb-4">Google Trends Widgets</h1>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div id="trends-widget-1" style="width: 100%; height: 400px;"></div>
+                <script type="text/javascript">
+                    trends.embed.renderExploreWidget(
+                        "GEO_MAP",
+                        {
+                            "comparisonItem": [
+                                {"keyword": "cough + ubo", "geo": "PH", "time": "2020-02-01 2020-03-30"},
+                                {"keyword": "fever + lagnat", "geo": "PH", "time": "2020-02-01 2020-03-30"},
+                                {"keyword": "covid symptoms", "geo": "PH", "time": "2020-02-01 2020-03-30"},
+                                {"keyword": "flu + trangkaso", "geo": "PH", "time": "2020-02-01 2020-03-30"},
+                                {"keyword": "swab test", "geo": "PH", "time": "2020-02-01 2020-03-30"}
+                            ],
+                            "category": 0,
+                            "property": ""
+                        },
+                        {
+                            "exploreQuery": "date=2020-02-01%202020-03-30&geo=PH&q=cough%20%2B%20ubo,fever%20%2B%20lagnat,covid%20symptoms,flu%20%2B%20trangkaso,swab%20test&hl=en",
+                            "guestPath": "https://trends.google.com:443/trends/embed/"
+                        }
+                    );
+                </script>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div id="trends-widget-2" style="width: 100%; height: 400px;"></div>
+                <script type="text/javascript">
+                    trends.embed.renderExploreWidget(
+                        "RELATED_QUERIES",
+                        {
+                            "comparisonItem": [
+                                {"keyword": "cough + ubo", "geo": "PH-00", "time": "2020-02-01 2020-03-30"}
+                            ],
+                            "category": 0,
+                            "property": ""
+                        },
+                        {
+                            "exploreQuery": "date=2020-02-01 2020-03-30&geo=PH-00&q=cough%20%2B%20ubo&hl=en",
+                            "guestPath": "https://trends.google.com:443/trends/embed/"
+                        }
+                    );
+                </script>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
