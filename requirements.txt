@@ -116,3 +116,4 @@ webencodings==0.5.1
 Werkzeug==3.0.3
 wrapt==1.16.0
 yarg==0.1.9
+whitenoise

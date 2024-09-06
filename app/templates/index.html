@@ -4,99 +4,641 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Infodemiology{% endblock %}</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Infodemiology</title>
+    <link rel="stylesheet" href="../static/css/style copy.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/3728_RC01/embed_loader.js"></script>
 </head>
 <body>
     <header>
         <div class="container">
             <div class="logo">
-                <img src="/static/logos/DOH_LOGO.png" alt="Infodemiology Logo">
+                <img src="../static/logos/DOH_LOGO.png" alt="Infodemiology Logo">
             </div>
             <h1>Infodemiology Website</h1>
             <nav>
                 <ul>
-                    <li><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+                    <!-- <li><a href="{% url 'index' %}" class="nav-link">Home</a></li>
                     <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
                     <li><a href="{% url 'about' %}" class="nav-link">Contacts</a></li>
-                    <li><a href="{% url 'about' %}" class="nav-link">More</a></li>
+                    <li><a href="{% url 'about' %}" class="nav-link">More</a></li> -->
                 </ul>
             </nav>
             <div class="search">
-                <input type="text" placeholder="Search...">
-                <button type="submit"><i class="fa fa-search"></i>Search</button>
+   
+
             </div>
         </div>
     </header>
     <main>
-        {% block content %}
+
+        <!--Clock-->
         <div class="clock-container">
             <div class="time" id="time"></div>
             <div class="date" id="date">February 1, 2020</div>
         </div>
-            <div id="region-name" style="margin-top: 20px; font-size: 36px; font-weight: bold;">Data Driven Monitoring System</div>
+            <!--Header Title-->
+            <div id="region-name" style="margin-top: 20px; font-size: 36px; font-weight: bold;">Metro Manila COVID-19 Prediction</div>
+
+                <!--ARIMAX Prediction-->
                 <div class="map-chart">
-                    <div class="chart"><canvas id="myChart" ></canvas><div style="font-weight: bold; font-size: 23px;">ARIMAX Prediction</div>
+                <div class="chart"><canvas id="myChart" ></canvas><div style="font-weight: bold; font-size: 23px;">ARIMAX Prediction</div>
                     <div style="padding-left: 10px; font-size: 20px;" id="arimatext">
                         ⚠️ Warning: In March 2020, the number of infected cases is expected to increase significantly. Please wear your mask and always practice social distancing to protect yourself and others.</div>
                     </div>
-                    <div class="chart"><canvas id="myChart2" ></canvas><div style="font-weight: bold;font-size: 23px;">Symptoms Distribution</div><div id="symptoms" style="padding-left: 10px;font-size: 20px;">
-                        Symptoms such as cough, fever, and flu are currently rampant. Please monitor yourself for COVID-19 symptoms, and if you notice any signs, kindly isolate yourself to prevent spreading the virus to others. </div></div>   
+
+                    <div class="chart">
+                        <!--Doughnut Chart-->
+                        <canvas id="myChart2" ></canvas>
+                        <div style="font-weight: bold;font-size: 23px;">Search Volumes of COVID-19 Symptoms</div>
+                        <div id="symptoms" style="padding-left: 10px;font-size: 20px;">
+                            Symptoms such as cough, fever, and flu are currently rampant. Please monitor yourself for COVID-19 symptoms, and if you notice any signs, kindly isolate yourself to prevent spreading the virus to others. 
+                        </div>
+                    </div>   
                     
+
+                    <!--This is the philippine map-->
                     <div id="map-container" style="margin-top: 20px;"></div>
 
-                    <div class="sidechart" style="width: 500px;"> <div id="region-name2" style="margin-top: 20px; font-size: 16px; font-weight: bold;"></div>
-               
+
+                    <!--Health Capacity Bar Chart-->  
+                    <div class="sidechart" style="width: 500px;"> 
+                    <div id="region-name2" style="margin-top: 20px; font-size: 16px; font-weight: bold;"></div>
                     <div style="font-weight: bold; font-size: 36px;">Health Capacity</div> 
                             Here's a quick overview for the available health and hospital capacity of this region. 
                             <div class="sidechart" style="width: 450px; margin: auto; height:500px;">
                                 <canvas id="myChart3"></canvas>
-
                                 <div id="insight"></div>
                                 <br>
                                 <div id="recommendation"></div>
                             </div>
                         </div>
-                     
-                </div>
-
-                
-               
-                <h1 style="font-size: 36px;">Syndromic Surveillance</h1>
-                    <!-- <div id="trends-widget" style="width: 400px; height: 400px; padding:20px;">
-                        <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/3769_RC01/embed_loader.js"></script>
-                        <script type="text/javascript">
-                            trends.embed.renderExploreWidget("RELATED_QUERIES",
-                            {"comparisonItem":[{"keyword":"cough + ubo","geo":"PH-00","time":"2020-02-01 2020-03-30"}],"category":0,"property":""},
-                            {"exploreQuery":"date=2020-02-01 2020-03-30&geo=PH-00&q=cough%20%2B%20ubo&hl=en","guestPath":"https://trends.google.com:443/trends/embed/"});
-                        </script>
-                    </div>  -->
-                    <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/3769_RC01/embed_loader.js"></script> <script type="text/javascript"> trends.embed.renderExploreWidget("GEO_MAP", {"comparisonItem":[{"keyword":"cough + ubo","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"fever + lagnat","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"covid symptoms","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"flu + trangkaso","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"swab test","geo":"PH","time":"2020-02-01 2020-03-30"}],"category":0,"property":""}, {"exploreQuery":"date=2020-02-01%202020-03-30&geo=PH&q=cough%20%2B%20ubo,fever%20%2B%20lagnat,covid%20symptoms,flu%20%2B%20trangkaso,swab%20test&hl=en","guestPath":"https://trends.google.com:443/trends/embed/"}); </script>
-              
-                </div>
-
                     </div>
-                    
-                </div>
-                  <button onclick="window.print();" class="noPrint">
-                  Generate Report
-                  </button>
 
-        {% endblock %}
+                <!--Google Trends Widget-->
+            <h1 style="font-size: 36px;">Syndromic Surveillance</h1>
+                   <!-- 
+                    <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/3769_RC01/embed_loader.js"></script> <script type="text/javascript"> trends.embed.renderExploreWidget("GEO_MAP", {"comparisonItem":[{"keyword":"cough + ubo","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"fever + lagnat","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"covid symptoms","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"flu + trangkaso","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"swab test","geo":"PH","time":"2020-02-01 2020-03-30"}],"category":0,"property":""}, {"exploreQuery":"date=2020-02-01%202020-03-30&geo=PH&q=cough%20%2B%20ubo,fever%20%2B%20lagnat,covid%20symptoms,flu%20%2B%20trangkaso,swab%20test&hl=en","guestPath":"https://trends.google.com:443/trends/embed/"}); </script> -->
+
+                    <!-- <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/3769_RC01/embed_loader.js"></script>
+                    <script type="text/javascript">
+                        function renderTrendsWidget(keywords, geo, timeRange) {
+                            trends.embed.renderExploreWidget("GEO_MAP", {
+                                "comparisonItem": keywords.map(keyword => ({
+                                    "keyword": keyword,
+                                    "geo": geo,
+                                    "time": timeRange
+                                })),
+                                "category": 0,
+                                "property": ""
+                            }, {
+                                "exploreQuery": `date=${timeRange}&geo=${geo}&q=${keywords.join(',')}&hl=en`,
+                                "guestPath": "https://trends.google.com:443/trends/embed/"
+                            });
+                        }
+
+                        // Example usage:
+                        const keywords = ["cough + ubo", "fever + lagnat", "covid symptoms", "flu + trangkaso", "swab test"];
+                        const geo = "PH"; // Geo can be changed dynamically
+                        const timeRange = "2020-02-01 2020-03-30"; // Time range can be changed dynamically
+
+                        renderTrendsWidget(keywords, geo, timeRange);
+
+                        function formatTimeRangeToWords(timeRange) {
+                            // Split the time range into start and end dates
+                            const [startDate, endDate] = timeRange.split(' ');
+                        
+                            // Convert the dates into JavaScript Date objects for better formatting
+                            const startDateObj = new Date(startDate);
+                            const endDateObj = new Date(endDate);
+                        
+                            // Format the dates into readable strings
+                            const formattedStartDate = startDateObj.toLocaleDateString('en-US', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            });
+                        
+                            const formattedEndDate = endDateObj.toLocaleDateString('en-US', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            });
+                        
+                            // Construct the final time range in words
+                            const timeRangeInWords = `From ${formattedStartDate} to ${formattedEndDate}`;
+                        
+                            return timeRangeInWords;
+                        }
+                    </script>
+
+                    <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/3769_RC01/embed_loader.js"></script> <script type="text/javascript"> trends.embed.renderExploreWidget("RELATED_QUERIES_0", {"comparisonItem":[{"keyword":"cough + ubo","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"fever + lagnat","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"covid symptoms","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"flu + trangkaso","geo":"PH","time":"2020-02-01 2020-03-30"},{"keyword":"swab test","geo":"PH","time":"2020-02-01 2020-03-30"}],"category":0,"property":""}, {"exploreQuery":"date=2020-02-01%202020-03-30&geo=PH&q=cough%20%2B%20ubo,fever%20%2B%20lagnat,covid%20symptoms,flu%20%2B%20trangkaso,swab%20test&hl=en","guestPath":"https://trends.google.com:443/trends/embed/"}); </script> -->
+
+ 
+    <div id="widget1" class="widget-container active">
+        <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/3769_RC01/embed_loader.js"></script>
+        <script type="text/javascript">
+            function renderTrendsWidget(keywords, geo, timeRange) {
+                trends.embed.renderExploreWidget("GEO_MAP", {
+                    "comparisonItem": keywords.map(keyword => ({
+                        "keyword": keyword,
+                        "geo": geo,
+                        "time": timeRange
+                    })),
+                    "category": 0,
+                    "property": ""
+                }, {
+                    "exploreQuery": `date=${timeRange}&geo=${geo}&q=${keywords.join(',')}&hl=en`,
+                    "guestPath": "https://trends.google.com:443/trends/embed/"
+                });
+            }
+
+            // Example usage:
+            const keywords = ["cough + ubo", "fever + lagnat", "covid symptoms", "flu + trangkaso", "swab test"];
+            const geo = "PH"; // Geo can be changed dynamically
+            const timeRange = "2020-02-01 2020-03-30"; // Time range can be changed dynamically
+
+            renderTrendsWidget(keywords, geo, timeRange);
+
+            function formatTimeRangeToWords(timeRange) {
+                // Split the time range into start and end dates
+                const [startDate, endDate] = timeRange.split(' ');
+            
+                // Convert the dates into JavaScript Date objects for better formatting
+                const startDateObj = new Date(startDate);
+                const endDateObj = new Date(endDate);
+            
+                // Format the dates into readable strings
+                const formattedStartDate = startDateObj.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            
+                const formattedEndDate = endDateObj.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            
+                // Construct the final time range in words
+                const timeRangeInWords = `From ${formattedStartDate} to ${formattedEndDate}`;
+            
+                return timeRangeInWords;
+            }
+        </script>
+    </div>
+    <div id="widget2" class="widget-container">
+        <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/3769_RC01/embed_loader.js"></script> 
+        <script type="text/javascript"> 
+            trends.embed.renderExploreWidget("RELATED_QUERIES_0", {
+                "comparisonItem":[
+                    {"keyword":"cough + ubo","geo":"PH","time":"2020-02-01 2020-03-30"},
+                    {"keyword":"fever + lagnat","geo":"PH","time":"2020-02-01 2020-03-30"},
+                    {"keyword":"covid symptoms","geo":"PH","time":"2020-02-01 2020-03-30"},
+                    {"keyword":"flu + trangkaso","geo":"PH","time":"2020-02-01 2020-03-30"},
+                    {"keyword":"swab test","geo":"PH","time":"2020-02-01 2020-03-30"}
+                ],
+                "category":0,
+                "property":""
+            }, {
+                "exploreQuery":"date=2020-02-01%202020-03-30&geo=PH&q=cough%20%2B%20ubo,fever%20%2B%20lagnat,covid%20symptoms,flu%20%2B%20trangkaso,swab%20test&hl=en",
+                "guestPath":"https://trends.google.com:443/trends/embed/"
+            }); 
+        </script>
+    </div>
+
+    <script>
+        function toggleWidgets() {
+            const widget1 = document.getElementById('widget1');
+            const widget2 = document.getElementById('widget2');
+
+            if (widget1.style.display === 'none') {
+                widget1.style.display = 'block';
+                widget2.style.display = 'none';
+            } else {
+                widget1.style.display = 'none';
+                widget2.style.display = 'block';
+            }
+        }
+
+        // Ensure the initial visibility states are set correctly
+        document.getElementById('widget1').style.display = 'block';
+        document.getElementById('widget2').style.display = 'none';
+    </script>
+
+    <button class="btn" onclick="toggleWidgets()">Switch Widget</button>
+    <button  class="btn" onclick="window.print();" class="noPrint">Generate Report</button>
 
     </main>
 
     <script>
-
-       
-
         document.addEventListener('DOMContentLoaded', function () {
+
+            let NCR = []; // Initialize NCR as an empty array
+
+            async function fetchNCRData() {
+                try {
+                    const response = await fetch('{% static "arima/regional/NCR.csv"%}');
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const data = await response.text();
+
+                    // Split the text by new lines
+                    let rows = data.trim().split('\n');
+                    
+                    // Convert each row to a number
+                    NCR = rows.map(row => parseFloat(row.trim()));
+                    
+                    // Log the array of values
+                    console.log('Values:', NCR);
+
+                    // Now NCR has been assigned a value, you can use it here or pass it to functions
+                    useNCRData(NCR); // Example of using NCR outside
+
+                    return NCR; // Return NCR for further use if needed
+                } catch (error) {
+                    console.error('Error fetching or processing data:', error);
+                    throw error; // Propagate the error further if needed
+                }
+            }
+
+            // Call fetchNCRData to initiate fetching
+            fetchNCRData()
+                .then(() => {
+                    // Example: Logging NCR outside (will log the fetched and processed data)
+                    console.log("Outside fetch:", NCR);
+                })
+                .catch(error => {
+                    // Handle errors from fetchNCRData
+                    console.error('Error:', error);
+                });
+
+                console.log("TESTER ",NCR)
+            async function fetchData(region) {
+          
+                const response = await fetch("{% static 'arima/' %}"+ region + ".csv");
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                const data = await response.text();
+                return data;
+            }
+            
+            async function processData(region) {
+                try {
+                    const csvData = await fetchData(region);
+                    const rows = csvData.trim().split('\n');  // Split by new lines
+                    
+                    // Convert string values to numbers
+                    const actualCases = rows.map(row => parseFloat(row.trim()));
+                    
+                    // Return the processed data
+                    return actualCases;
+                } catch (error) {
+                    console.error('Error fetching or processing data:', error);
+                    return [];  // Return an empty array in case of an error
+                }
+            }
+
+        
+        let sumIlocos;
+        let sumNCR;
+        let sumBicol;
+        let sumARMM;
+        let sumCagValley;
+        let sumCAR;
+        let sumCalabarzon;
+        let sumBARMM;
+        let sumCARAGA;
+        let sumCentralLuzon;
+        let sumCentralVisayas;
+        let sumDavao;
+        let sumEasternVisayas;
+        let sumMimaropa;
+        let sumZamboanga;
+        let sumMindanao;
+        let sumWesternVisayas;
+
+        fetch('{% static "arima/Ilocos Region (Region I).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumIlocos = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('SumIlocos:', sumIlocos);
+                    // Example: Display the sum in the body of the document
+                })
+        fetch('{% static "arima/Metropolitan Manila.csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumNCR = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('Sum:', sumNCR);
+                    // Example: Display the sum in the body of the document
+            
+                })
+        fetch('{% static "arima/Autonomous Region of Muslim Mindanao (ARMM).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumARMM = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('SumARMM:', sumARMM);
+                    // Example: Display the sum in the body of the document
+                   
+                })
+                        
+        fetch('{% static "arima/Cagayan Valley (Region II).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumCagValley = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('SumCagValley:', sumCagValley);
+                    // Example: Display the sum in the body of the document
+                    
+                })    
+
+        fetch('{% static "arima/Cordillera Administrative Region (CAR).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumCAR = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('SumCAR:', sumCAR);
+                    // Example: Display the sum in the body of the document
+                   
+                })
+        fetch('{% static "arima/CALABARZON (Region IV-A).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumCalabarzon = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('sumCalabarzon:', sumCalabarzon);
+                    // Example: Display the sum in the body of the document
+                   
+                })
+        fetch('{% static "arima/Bicol Region (Region V).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumBicol = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('sumBicol:', sumBicol);
+                    // Example: Display the sum in the body of the document
+                    
+                })
+        fetch('{% static "arima/Autonomous Region of Muslim Mindanao (ARMM).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumBARMM = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('sumBARMM:', sumBARMM);
+                    // Example: Display the sum in the body of the document
+                    
+                })
+        fetch('{% static "arima/Caraga (Region XIII).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumCARAGA = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('sumCARAGA:', sumCARAGA);
+                    // Example: Display the sum in the body of the document
+                   
+                })
+        fetch('{% static "arima/Central Luzon (Region III).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumCentralLuzon = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('sumCentralLuzon:', sumCentralLuzon);
+                    // Example: Display the sum in the body of the document
+                    
+                })
+        fetch('{% static "arima/Central Visayas (Region VII).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumCentralVisayas = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('sumCentralVisayas:', sumCentralVisayas);
+                    // Example: Display the sum in the body of the document
+                   
+                })
+        fetch('{% static "arima/Davao Region (Region XI).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumDavao = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('sumDavao:',sumDavao);
+                    // Example: Display the sum in the body of the document
+                   
+                })
+        fetch('{% static "arima/Eastern Visayas (Region VIII).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumEasternVisayas = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('sumEasternVisayas:',sumEasternVisayas);
+                    // Example: Display the sum in the body of the document
+                   
+                })
+        fetch('{% static "arima/MIMAROPA (Region IV-B).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumMimaropa = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('sumMimaropa:',sumMimaropa);
+                    // Example: Display the sum in the body of the document
+                  
+                })
+        fetch('{% static "arima/Zamboanga Peninsula (Region IX).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumZamboanga = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('sumZamboanga:',sumZamboanga);
+                    // Example: Display the sum in the body of the document
+                   
+                })
+        fetch('{% static "arima/Northern Mindanao (Region X).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumMindanao = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('sumMindanao:',sumMindanao);
+                    // Example: Display the sum in the body of the document
+                  
+                })
+        fetch('{% static "arima/Western Visayas (Region VI).csv" %}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the text by new lines
+                    let rows = data.split('\n');
+                    // Convert each row to a number
+                    let values = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0) // Remove empty rows
+                    .map(row => parseFloat(row))
+                    .filter(value => !isNaN(value)); // Filter o
+                    // Calculate the sum of the values
+                    sumWesternVisayas = values.reduce((acc, value) => acc + value, 0);
+                    // Display the sum in the console
+                    console.log('sumWesternVisayas:',sumWesternVisayas);
+                    // Example: Display the sum in the body of the document
+                    
+                })
+
             var ctx = document.getElementById('myChart').getContext('2d');
             var initialData = {
                 labels: [
@@ -115,18 +657,11 @@
             ], // Sample date labels
                 datasets: [
                   {
-                    label: 'Prediction',
-                    data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 11.0, 7.0, 10.0, 2.0, 8.0, 35.0, 22.0, 1.0, 36.0, 11.0, 12.0, 12.0, 53.0, 53.0, 64.0, 66.0, 60.0, 43.0, 74.0, 181.0, 240.0, 68.0]
+                    label: 'Confirmed Daily Cases',
+                    data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 11.0, 7.0, 10.0, 2.0, 8.0, 35.0, 22.0, 1.0, 36.0, 11.0, 12.0, 12.0, 53.0, 53.0, 64.0, 66.0, 60.0, 43.0, 74.0, 126]
                     , // Initial data for actual cases
                     borderColor: 'rgba(255, 99, 132, 1)', // Red color for actual cases
                     backgroundColor: 'rgba(255, 99, 132, 0.2)', // Optional background color
-                    borderWidth: 1
-                  },
-                  {
-                   
-                    data:[], // Initial data for predicted cases
-                    borderColor: 'rgba(54, 162, 235, 1)', // Blue color for predicted cases
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Optional background color
                     borderWidth: 1
                   }
                 ]
@@ -152,41 +687,42 @@
               }
             });
 
-const labels = ['Available Beds', 'Isol. Beds', 'TTMF', 'Oxygen Tanks', 'Ventilator', 'HR', '%Vaccinated'];
-const data = {
-    labels: labels,
-    datasets: [{
-        label: 'My First Dataset',
-        data: [65, 59, 80, 81, 56, 55, 40],
-        backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(255, 205, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(201, 203, 207, 0.2)'
-        ],
-        borderColor: [
-            'rgb(255, 99, 132)',
-            'rgb(255, 159, 64)',
-            'rgb(255, 205, 86)',
-            'rgb(75, 192, 192)',
-            'rgb(54, 162, 235)',
-            'rgb(153, 102, 255)',
-            'rgb(201, 203, 207)'
-        ],
-        borderWidth: 1
-    }]
-};
-
-function getHealthCapacity(region){
-    var healthCapacitydatasets = {
+            // for health capacity data chart
+            const labels = ['Available Beds', 'Isol. Beds', 'TTMF', 'Oxygen Tanks', 'Ventilator', 'HR', '%Vaccinated'];
+            const data = {
+                labels: labels,
+                datasets: [{
+                    label: 'Hospital Capacity',
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(201, 203, 207, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(54, 162, 235)',
+                        'rgb(153, 102, 255)',
+                        'rgb(201, 203, 207)'
+                    ],
+                    borderWidth: 2
+                }]
+            };
+        
+        function getHealthCapacity(region){
+        var healthCapacitydatasets = {
         'Ilocos Region (Region I)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [35, 29, 60, 81, 56, 55, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -202,8 +738,8 @@ function getHealthCapacity(region){
         'Cordillera Administrative Region (CAR)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [25, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [15, 19, 40, 31, 56, 55, 50],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -219,8 +755,8 @@ function getHealthCapacity(region){
         'Central Luzon (Region III)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [25, 29, 50, 81, 56, 25, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -235,7 +771,7 @@ function getHealthCapacity(region){
         }, 'Metropolitan Manila': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
+                label: 'Hospital Capacity',
                 data: [65, 59, 80, 81, 56, 55, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
@@ -252,8 +788,8 @@ function getHealthCapacity(region){
         'CALABARZON (Region IV-A)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [15, 59, 80, 21, 56, 35, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -269,8 +805,8 @@ function getHealthCapacity(region){
         'MIMAROPA (Region IV-B)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [35, 59,280, 81, 36, 55, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -286,8 +822,8 @@ function getHealthCapacity(region){
         'Bicol Region (Region V)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [35, 59, 40, 41, 56, 55, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -303,8 +839,8 @@ function getHealthCapacity(region){
         'Eastern Visayas (Region VIII)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [55, 59, 30, 51, 56, 55, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -320,8 +856,8 @@ function getHealthCapacity(region){
         'Western Visayas (Region VI)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [35, 59, 50, 31, 56, 55, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -337,8 +873,8 @@ function getHealthCapacity(region){
         'Central Visayas (Region VII)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [11, 19, 10, 11, 16, 15, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -354,8 +890,8 @@ function getHealthCapacity(region){
         'Western Visayas (Region VI)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [25, 59, 40, 81, 26, 55, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -371,7 +907,7 @@ function getHealthCapacity(region){
         'Zamboanga Peninsula (Region IX)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
+                label: 'Hospital Capacity',
                 data: [65, 59, 80, 81, 56, 55, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
@@ -388,8 +924,8 @@ function getHealthCapacity(region){
         'Northern Mindanao (Region X)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [25, 29, 80, 81, 56, 55, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -405,8 +941,8 @@ function getHealthCapacity(region){
         'Autonomous Region of Muslim Mindanao (ARMM)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [15, 19, 80, 81, 56, 55, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -422,8 +958,8 @@ function getHealthCapacity(region){
         'SOCCSKSARGEN (Region XII)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [15, 59, 80, 81, 56, 55, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -439,8 +975,8 @@ function getHealthCapacity(region){
         'Cagayan Valley (Region II)': {
             labels: labels,
             datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Hospital Capacity',
+                data: [11, 39, 80, 81, 56, 55, 40],
                 backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
@@ -452,189 +988,319 @@ function getHealthCapacity(region){
             ],
                 hoverOffset: 4
             }]
+        
+            
+            
         }
         
-}
-return healthCapacitydatasets[region] || { labels: [], datasets: [] };
-}
-
-const config = {
-    type: 'bar',
-    data: data,
-    options: {
+        }
+        return healthCapacitydatasets[region] || { labels: [], datasets: [] };
+        }
+        
+        const config = {
+        type: 'bar',
+        data: data,
+        options: {
         scales: {
             y: {
                 beginAtZero: true
             }
         }
-    },
-};
+        },
+        };
+        
+        var myHealthCapacityChart = new Chart(
+        document.getElementById('myChart3'),
+        config
+        );
 
-var myHealthCapacityChart = new Chart(
-    document.getElementById('myChart3'),
-    config
-);
+        
 
-
-
-            var mapUrl = '{% static "map/philippines-topo2.json" %}'; // Adjust this path as necessary
-
+        var mapUrl = '{% static "map/philippines-topo2.json" %}';// Adjust this path as necessary
+        
             var width = 400,
                 height = 600; // Adjusted height to make the map more visible
-
+        
             var svg = d3.select("#map-container").append("svg")
                 .attr("class", "centered-svg")
                 .attr("width", width)
                 .attr("height", height);
-
+        
             d3.json(mapUrl).then(function(data) {
                 // Check if the expected object exists in the TopoJSON data
                 if (!data || !data.objects || !data.objects.philippines) {
                     console.error("Invalid TopoJSON file or object structure.");
                     return;
                 }
-
+        
                 var philippines = data.objects.philippines;
-
+        
                 // Define a color scale
                 var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-
+        
                 // Adjust projection scale and translation for a larger map
                 var projection = d3.geoMercator()
                     .fitSize([width, height], topojson.feature(data, philippines));
-
+        
                 var path = d3.geoPath().projection(projection);
 
+                region = ['NCR','01','02','03','4A','4B','05','06','07','08','09','10','11','CAR','CARAGA','BARMM']
+
+                let regionSums = {
+                    "Ilocos Region (Region I)": sumIlocos,
+                    "Metropolitan Manila": sumNCR,
+                    "Autonomous Region of Muslim Mindanao (ARMM)": sumARMM,
+                    "Cagayan Valley (Region II)": sumCagValley,
+                    "Cordillera Administrative Region (CAR)": sumCAR,
+                    "CALABARZON (Region IV-A)": sumCalabarzon,
+                    "Bicol Region (Region V)": sumBicol,
+                    "BARMM": sumBARMM, // Assuming BARMM is used for Autonomous Region of Muslim Mindanao
+                    "Caraga (Region XIII)": sumCARAGA,
+                    "Central Luzon (Region III)": sumCentralLuzon,
+                    "Central Visayas (Region VII)": sumCentralVisayas,
+                    "Davao Region (Region XI)": sumDavao,
+                    "MIMAROPA (Region IV-B)": sumMimaropa,
+                    "Zamboanga Peninsula (Region IX)": sumZamboanga,
+                    "Western Visayas (Region VI)": sumWesternVisayas,
+                    "Eastern Visayas (Region VIII)": sumEasternVisayas,
+                };
+                
+                // Example usage
+                console.log(regionSums["NCR"]); // Accessing the sumNCR variable through the dictionary
+
+                console.log("CALABARZON ", sumCalabarzon)
+                
+
+                 // Define a color scale from light red to red
+                 var colorScale = d3.scaleLinear()
+                 .domain([0, 100])  // Adjust domain based on your actual data range
+                 .range(["#ffcccc", "#ff0000"]);
+        
                 // Draw the map and color regions
                 svg.selectAll("path")
                     .data(topojson.feature(data, philippines).features)
                     .enter().append("path")
                     .attr("d", path)
                     .style("fill", function(d) {
-                        // Assign color based on region
-                        return colorScale(d.properties.REGION);
+                        // Assign color based on region (use a random value for demonstration)
+                        // Replace the random value with a meaningful metric as needed
+
+                        if(d.properties.REGION == 'Ilocos Region (Region I)'){
+                            return colorScale(Number(sumIlocos));
+                        }
+                        else if(d.properties.REGION == 'Metropolitan Manila'){
+                            return colorScale(Number(sumNCR));
+                        }
+                        else if(d.properties.REGION == 'Autonomous Region of Muslim Mindanao (ARMM)'){
+                            return colorScale(Number(sumARMM));
+                        }
+                        else if(d.properties.REGION == 'Cagayan Valley (Region II)'){
+                            return colorScale(Number(sumCagValley))
+                        }
+                        else if(d.properties.REGION == 'Cordillera Administrative Region (CAR)'){
+                            return colorScale(Number(sumCAR))
+                        }
+                        else if(d.properties.REGION == 'CALABARZON (Region IV-A)'){
+                            return colorScale(Number(sumCalabarzon))
+                        }
+                        else if(d.properties.REGION == 'Bicol Region (Region V)'){
+                            return colorScale(Number(sumBicol))
+                        }
+                        else if(d.properties.REGION == 'Autonomous Region of Muslim Mindanao (ARMM)'){
+                            return colorScale(Number(sumBARMM))
+                        }
+                        else if(d.properties.REGION == 'Caraga (Region XIII)'){
+                            return colorScale(Number(sumCARAGA))
+                        }
+                        else if(d.properties.REGION == 'Central Luzon (Region III)'){
+                            return colorScale(Number(sumCentralLuzon))
+                        }
+                        else if(d.properties.REGION == 'Central Visayas (Region VII)'){
+                            return colorScale(Number(sumCentralVisayas))
+                        }
+                        else if(d.properties.REGION == 'Davao Region (Region XI)'){
+                            return colorScale(Number(sumDavao))
+                        }
+                        else if(d.properties.REGION == 'MIMAROPA (Region IV-B)'){
+                            return colorScale(Number(sumMimaropa))
+                        }
+                        else if(d.properties.REGION == 'Zamboanga Peninsula (Region IX)'){
+                            return colorScale(Number(sumZamboanga))
+                        }
+                        else if(d.properties.REGION == 'Western Visayas (Region VI)'){
+                            return colorScale(Number(sumWesternVisayas))
+                        }
+                            return colorScale(0);
                     })
-                    .on("click", function(event, d) {
+                    .on("click", async function(event, d) {
                         // Display the region name when clicked
                         d3.select("#region-name").text(d.properties.REGION);
                         d3.select("#region-name2").text(d.properties.REGION);
 
+        
                         // Fetch new data based on the selected region
                         var regionName = d.properties.REGION;
-                        var newData = getRegionData(regionName);
-
+                        var newData = await getRegionData(regionName);
+        
                         // Update chart data
                         myChart.data.datasets[0].data = newData.actualCases;
-                        myChart.data.datasets[1].data = newData.predictedCases;
                         myChart.update();
-
-                        var doughnutData = getDoughnutData(regionName);
+        
+                        var doughnutData = await getDoughnutData(regionName);
                         var dataValues = doughnutData.datasets[0].data.join(', ');
                         myDoughnutChart.data = doughnutData;
                         myDoughnutChart.update();
-
+        
                         //health capacity data
                         var healthCapacity =  getHealthCapacity(regionName);
                         myHealthCapacityChart.data = healthCapacity;
                         myHealthCapacityChart.update()
-
-                        d3.select("#arimatext").html("⚠️ Warning: In March 2020, the number of infected cases is expected to <em style='color: red; font-size: 1.2em;'>increase</em> significantly in " + "<strong>" + d.properties.REGION + "</strong>" + ". <br> <br> Please wear your mask and always practice social distancing to protect yourself and others.");
-
+        
+                        d3.select("#arimatext").html("⚠️ Reminder: <br>"+formatTimeRangeToWords(timeRange)+ ", the number of infected cases is expected to have <em style='color: red; font-size: 1em;'>" + regionSums[d.properties.REGION].toFixed(0) + " additional confirmed cases </em> in " + "<strong>" + d.properties.REGION + "</strong>" + ". <br> <br>⚠️  Please wear your mask and always practice social distancing to protect yourself and others.");
+        
                         d3.select("#symptoms").html(
-                            "In the region of <strong>" + d.properties.REGION + "</strong>, the relative search volumes for COVID-19 symptoms are noteworthy. " +
-                            "The searches for <b style='color: red;'>Cough</b> are at " + doughnutData.datasets[0].data[0] + ", indicating a high level of concern. " +
-                            "<b style='color: blue;'>Fever</b> follows with a search volume of " + doughnutData.datasets[0].data[1] + ", " +
-                            "while <b style='color: orange;'>Flu</b> has a search volume of " + doughnutData.datasets[0].data[2] + "."
+                            "<em style='color: red; font-size: 1em;'>Cough</em> are at " + doughnutData.datasets[0].data[0] + "%, indicating a high level of concern. " +
+                            "<em style='color: blue; font-size: 1em;'><br>Fever</em> follows with a search volume of " + doughnutData.datasets[0].data[1] + "%, " +
+                            "while <em style='color: orange; font-size: 1em;'><br>Flu</em> has a search volume of " + doughnutData.datasets[0].data[2] + "%."
                         );
                         
-                        
-
                         d3.select("#insight").html("Observation: In <strong>" + d.properties.REGION + "</strong>"+ "<strong>" + " ,<br>COUGH" + "</strong>" + " appears to be the most searched symptom, indicating it may be the most common concern among residents. Fever and flu also show significant search volumes, suggesting that these symptoms are prevalent and that residents should take precautionary measures, especially if they experience multiple symptoms.")
-
+        
                         d3.select("#recommendation").html("⚠️ Increase number of ventilators <br> ⚠️ Increase number of oxygen <br> ⚠️ Increase number of beds")
-                        
-
-
                     });
             }).catch(function(error) {
                 console.error("Error loading or parsing TopoJSON file:", error);
             });
 
-            function getRegionData(region) {
+            
+
+            
+        
+            async function getRegionData(region) {
+                const actualCases_m = await processData(region);
+                console.log(actualCases_m)
+
                 // Define your region-specific datasets here
                 var datasets = {
                     'Ilocos Region (Region I)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 3.0, 4.0, 1.0, 2.0, 1.0]
+                        actualCases: actualCases_m
                     },
                     'Cagayan Valley (Region II)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0, 5.0, 4.0, 0.0],
-
+                        actualCases: actualCases_m
+        
                     },
                     'Central Luzon (Region III)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 2.0, 3.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 4.0, 2.0, 5.0, 3.0, 2.0, 6.0, 1.0, 16.0, 15.0, 5.0],
+                        actualCases: actualCases_m
                     },
                     'Metropolitan Manila': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 11.0, 7.0, 10.0, 2.0, 8.0, 35.0, 22.0, 1.0, 36.0, 11.0, 12.0, 12.0, 53.0, 53.0, 64.0, 66.0, 60.0, 43.0, 74.0, 181.0, 240.0, 68.0]
-
+                        actualCases: actualCases_m,
+        
                     },
                     'CALABARZON (Region IV-A)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 5.0, 4.0, 0.0, 4.0, 2.0, 2.0, 0.0, 8.0, 13.0, 7.0, 12.0, 12.0, 11.0, 8.0, 45.0, 29.0, 19.0],
+                        actualCases: actualCases_m
                     },
                     'MIMAROPA (Region IV-B)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 2.0, 1.0, 0.0],
+                        actualCases: actualCases_m
                     },
                     'Bicol Region (Region V)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 1.0, 0.0]
-                        ,
+                        actualCases: actualCases_m
                     },
                     'Western Visayas (Region VI)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.0, 6.0, 4.0, 0.0],
-                      
+                        actualCases: actualCases_m,
                     },
                     'Central Visayas (Region VII)': {
-                        actualCases: [0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                        actualCases: actualCases_m,
                     },
                     'Eastern Visayas (Region VIII)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+                        actualCases: actualCases_m,
                     },
                     'Zamboanga Peninsula (Region IX)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                        actualCases: actualCases_m,
                     },
                     'Northern Mindanao (Region X)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+                        actualCases: actualCases_m,
                     },
                     'Davao Region (Region XI)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 0.0, 2.0, 1.0, 16.0, 19.0],
+                        actualCases: actualCases_m,
                     },
                     'Caraga (Region XIII)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+                        actualCases:actualCases_m,
                     },
                     'SOCCSKSARGEN (Region XII)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+                        actualCases: actualCases_m,
                     },
                     'Cordillera Administrative Region (CAR)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 2.0, 4.0],
+                        actualCases: actualCases_m
                     },
                     'Autonomous Region of Muslim Mindanao (ARMM)': {
-                        actualCases: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0],
+                        actualCases: [actualCases_m],
                     }
                 };
-
                 // Return data for the selected region
                 return datasets[region] || {actualCases: [], predictedCases: []};
             }
         }); 
 
+        let regionData = {}; // Initialize regionData globally as an empty object
 
-    /* Doughnut */
-    function getDoughnutData(region) {
+        async function fetchRegionData() {
+            try {
+                const response = await fetch('{% static "arima/regions_data.csv" %}');
+                const data = await response.text();
+        
+                // Split the text by new lines
+                let rows = data.split('\n');
+                
+                // Remove empty rows and split each row by comma
+                let parsedData = rows
+                    .map(row => row.trim())
+                    .filter(row => row.length > 0); // Remove empty rows
+        
+                // Extract headers and initialize dictionary
+                const headers = parsedData.shift().split(',');
+        
+                // Process each row to populate the dictionary
+                parsedData.forEach(row => {
+                    const values = row.split(',');
+                    const regionName = values[0];
+                    const cough = parseFloat(values[1]).toFixed(2);
+                    const flu = parseFloat(values[2]).toFixed(2);
+                    const fever = parseFloat(values[3]).toFixed(2);
+        
+                    regionData[regionName] = [cough,fever,flu];
+                });
+        
+                // Example: Display the dictionary in the console
+                console.log(regionData);
+                
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        
+        // Call fetchRegionData to populate regionData
+        fetchRegionData().then(() => {
+            // Example: Access regionData after it has been populated
+            console.log("HEREE", regionData['National Capital Region']);
+        
+            // Call functions or perform actions that depend on regionData here
+            // e.g., displayRegionData(regionData);
+        });
+
+        console.log("HEE", regionData);
+
+    
+
+        /* Doughnut */
+        async function getDoughnutData(region) {
+             await fetchRegionData();
         // Define your region-specific doughnut chart datasets here
         var doughnutDatasets = {
             'Ilocos Region (Region I)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [200, 100, 150],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region I - Ilocos Region'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -646,8 +1312,8 @@ var myHealthCapacityChart = new Chart(
             'Cagayan Valley (Region II)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [150, 120, 100],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region II - Cagayan Valley'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -659,8 +1325,8 @@ var myHealthCapacityChart = new Chart(
             'Central Luzon (Region III)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [250, 80, 180],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region III - Central Luzon'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -672,8 +1338,8 @@ var myHealthCapacityChart = new Chart(
             'Metropolitan Manila': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [300, 150, 200],
+                    label: 'Hospital Capacity',
+                    data: regionData['National Capital Region'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -685,8 +1351,8 @@ var myHealthCapacityChart = new Chart(
             'CALABARZON (Region IV-A)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [180, 120, 160],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region IV-A - CALABARZON'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -698,8 +1364,8 @@ var myHealthCapacityChart = new Chart(
             'MIMAROPA (Region IV-B)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [110, 90, 130],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region IV-B - MIMAROPA'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -711,8 +1377,8 @@ var myHealthCapacityChart = new Chart(
             'Bicol Region (Region V)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [130, 140, 100],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region V - Bicol Region'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -724,8 +1390,8 @@ var myHealthCapacityChart = new Chart(
             'Western Visayas (Region VI)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [170, 160, 150],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region VI - Western Visayas'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -737,8 +1403,8 @@ var myHealthCapacityChart = new Chart(
             'Central Visayas (Region VII)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [190, 140, 120],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region VII - Central Visayas'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -750,8 +1416,8 @@ var myHealthCapacityChart = new Chart(
             'Eastern Visayas (Region VIII)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [150, 130, 110],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region VIII - Eastern Visayas'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -763,8 +1429,8 @@ var myHealthCapacityChart = new Chart(
             'Zamboanga Peninsula (Region IX)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [120, 100, 140],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region IX - Zamboanga Peninsula'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -776,8 +1442,8 @@ var myHealthCapacityChart = new Chart(
             'Northern Mindanao (Region X)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [160, 140, 170],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region X - Northern Mindanao'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -789,8 +1455,8 @@ var myHealthCapacityChart = new Chart(
             'Davao Region (Region XI)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [180, 160, 190],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region XI - Davao Region'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -802,8 +1468,8 @@ var myHealthCapacityChart = new Chart(
             'Caraga (Region XIII)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [110, 90, 100],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region XIII - Caraga'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -815,8 +1481,8 @@ var myHealthCapacityChart = new Chart(
             'SOCCSKSARGEN (Region XII)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [150, 120, 130],
+                    label: 'Hospital Capacity',
+                    data: regionData['Region XII - SOCCSKSARGEN'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -828,8 +1494,8 @@ var myHealthCapacityChart = new Chart(
             'Cordillera Administrative Region (CAR)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [140, 110, 120],
+                    label: 'Hospital Capacity',
+                    data: regionData['CAR - Cordillera Administrative Region'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -841,8 +1507,8 @@ var myHealthCapacityChart = new Chart(
             'Autonomous Region of Muslim Mindanao (ARMM)': {
                 labels: ['cough', 'fever', 'flu'],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [130, 100, 110],
+                    label: 'Hospital Capacity',
+                    data: regionData['BARMM - Bangsamoro Autonomous Region in Muslim Mindanao'],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
@@ -852,40 +1518,61 @@ var myHealthCapacityChart = new Chart(
                 }]
             }
         };        
-
+        
         // Return data for the selected region
         return doughnutDatasets[region] || { labels: [], datasets: [] };
-    }
-
-   const doughnutData = {
-    labels: ['cough', 'fever', 'flu'],
-    datasets: [{
-        label: 'My First Dataset',
-        data: [300, 50, 100],
+        }
+       
+        const doughnutData = {
+        labels: ['cough', 'fever', 'flu'],
+        datasets: [{
+        label: 'Hospital Capacity',
+        data: [100, 50, 40],
         backgroundColor: [
             'rgb(255, 99, 132)',
             'rgb(54, 162, 235)',
             'rgb(255, 205, 86)'
         ],
         hoverOffset: 4
-    }]
-};
-
-// Chart configuration
-const doughnutConfig = {
-    type: 'doughnut',
-    data: doughnutData,
-    options: {}
-};
-
-// Create the doughnut chart
-var myDoughnutChart = new Chart(
-    document.getElementById('myChart2'),
-    doughnutConfig
-);
-
-
-    </script>
+        }]
+        };
+        
+        // Chart configuration
+        const doughnutConfig = {
+        type: 'doughnut',
+        data: doughnutData,
+        options: {
+            plugins: {
+                datalabels: {
+                    color: '#fff',
+                    anchor: 'end',
+                    align: 'start',
+                    offset: -10,
+                    borderRadius: 4,
+                    backgroundColor: (context) => {
+                        return context.dataset.backgroundColor;
+                    },
+                    font: {
+                        weight: 'bold'
+                    },
+                    formatter: (value) => {
+                        return value;
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    };
+        
+        // Create the doughnut chart
+        var myDoughnutChart = new Chart(
+        document.getElementById('myChart2'),
+        doughnutConfig
+        );
+        
+        
+        </script>
+   
     
     <footer>
         <div class="footer-container">
@@ -932,8 +1619,14 @@ var myDoughnutChart = new Chart(
             <p>&copy; 2024 Data Analytics Company. All rights reserved.</p>
         </div>
     </footer>
-    <!-- <script src="/static/js/map.js"></script>
-    <script src="/static/js/chart.js"></script> -->
-    <link rel="stylesheet" href="/static/css/style.css">
+    
+    <!--link javascript files-->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0"></script>
+    <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/3728_RC01/embed_loader.js"></script>
+    <link rel="stylesheet" href="../static/css/style copy.css">
 </body>
 </html>
