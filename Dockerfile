@@ -1,5 +1,12 @@
 FROM python:3.11
 
+# Ensure the virtual environment is activated
+ENV VIRTUAL_ENV=/app/venv
+RUN python -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+ENV DJANGO_SETTINGS_MODULE=infodemiology.settings
+
 # Install system dependencies including HDF5
 RUN apt-get update && \
     apt-get install -y \
@@ -25,4 +32,4 @@ COPY . .
 EXPOSE 8000
 
 # Command to run the application
-CMD ["gunicorn", "--bind=0.0.0.0:$PORT", "infodemiology.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "infodemiology.wsgi"]
