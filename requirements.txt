@@ -17,7 +17,6 @@ Cython==3.0.10
 debugpy==1.8.1
 decorator==5.1.1
 defusedxml==0.7.1
-Django==5.0.6
 docopt==0.6.2
 executing==2.0.1
 fastjsonschema==2.19.1
@@ -117,5 +116,5 @@ Werkzeug==3.0.3
 wrapt==1.16.0
 yarg==0.1.9
 whitenoise
-django
+Django>=4.0
 gunicorn

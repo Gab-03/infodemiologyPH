@@ -25,4 +25,4 @@ COPY . .
 EXPOSE 8000
 
 # Command to run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "infodemiology.wsgi"]
+CMD ["gunicorn", "--bind=0.0.0.0:$PORT", "infodemiology.wsgi:application"]
