@@ -118,3 +118,4 @@ wrapt==1.16.0
 yarg==0.1.9
 whitenoise
 django
+gunicorn
