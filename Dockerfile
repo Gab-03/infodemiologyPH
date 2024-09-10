@@ -1,11 +1,12 @@
+# Base image
 FROM python:3.11
 
-# Ensure the virtual environment is activated
+# Set the environment variable for the virtual environment
 ENV VIRTUAL_ENV=/app/venv
 RUN python -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-ENV DJANGO_SETTINGS_MODULE=infodemiology.settings
+# Ensure the virtual environment is activated
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Install system dependencies including HDF5
 RUN apt-get update && \
@@ -14,22 +15,27 @@ RUN apt-get update && \
         build-essential \
         python3-dev \
         libffi-dev \
-        libssl-dev
+        libssl-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the requirements file into the container
+# Copy the requirements file first to install dependencies
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies into the virtual environment
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code into the container
 COPY . .
 
+# Set environment variables for Django settings module
+ENV DJANGO_SETTINGS_MODULE=infodemiology.settings
+
 # Expose port 8000
 EXPOSE 8000
 
-# Command to run the application
+# Set command to run the application using Gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "infodemiology.wsgi"]
